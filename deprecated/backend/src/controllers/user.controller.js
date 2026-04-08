@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const userService = require("../services/user.services.js");
 const auth = require("../middleware/auth.middleware.js");
 const user = require("../models/user.js");
