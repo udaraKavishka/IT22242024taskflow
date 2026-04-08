@@ -1,4 +1,4 @@
-import axios from "axios";
+import httpClient from "../Utils/httpClient";
 import {
   registrationStart,
   registrationEnd,
@@ -56,7 +56,7 @@ export const register = async (
     );
   } else {
     try {
-      const res = await axios.post(`${backendUrl}/api/user/register`, {
+      const res = await httpClient.post(`${backendUrl}/api/user/register`, {
         name,
         surname,
         email,
@@ -110,7 +110,7 @@ export const login = async ({ email, password }, dispatch) => {
     );
   } else {
     try {
-      const res = await axios.post(`${backendUrl}/api/user/login`, { email, password });
+      const res = await httpClient.post(`${backendUrl}/api/user/login`, { email, password });
       const { user, message } = res.data;
       localStorage.setItem("token", user.token);
       setBearer(user.token);
@@ -143,7 +143,7 @@ export const loadUser = async (dispatch) => {
   if (!localStorage.token) return dispatch(loadFailure());
   setBearer(localStorage.token);
   try {
-    const res = await axios.get(`${backendUrl}/api/user/get-user`);
+    const res = await httpClient.get(`${backendUrl}/api/user/get-user`);
     dispatch(loadSuccess({ user: res.data }));
   } catch (error) {
     dispatch(loadFailure());
@@ -164,7 +164,7 @@ export const getUserFromEmail = async (email, dispatch) => {
   }
 
   try {
-    const res = await axios.post(`${backendUrl}/api/user/get-user-with-email`, { email });
+    const res = await httpClient.post(`${backendUrl}/api/user/get-user-with-email`, { email });
     dispatch(fetchingFinish());
     return res.data;
   } catch (error) {

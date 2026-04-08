@@ -1,4 +1,4 @@
-import axios from 'axios';
+import httpClient from '../Utils/httpClient';
 import { openAlert } from '../Redux/Slices/alertSlice';
 import {
 	setPending,
@@ -62,7 +62,7 @@ export const getCard = async (cardId, listId, boardId, dispatch) => {
 	try {
 		let response = '';
 		submitCall = submitCall.then(() =>
-			axios.get(cardRoute + '/' + boardId + '/' + listId + '/' + cardId).then((res) => {
+			httpClient.get(cardRoute + '/' + boardId + '/' + listId + '/' + cardId).then((res) => {
 				response = res;
 			})
 		);
@@ -88,7 +88,7 @@ export const titleUpdate = async (cardId, listId, boardId, title, dispatch) => {
 		dispatch(updateTitle(title));
 
 		submitCall = submitCall.then(() =>
-			axios.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId, { title: title })
+			httpClient.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId, { title: title })
 		);
 		await submitCall;
 	} catch (error) {
@@ -107,7 +107,7 @@ export const descriptionUpdate = async (cardId, listId, boardId, description, di
 		dispatch(updateDescriptionOfCard({ listId, cardId, description }));
 
 		submitCall = submitCall.then(() =>
-			axios.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId, { description: description })
+			httpClient.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId, { description: description })
 		);
 		await submitCall;
 	} catch (error) {
@@ -126,7 +126,7 @@ export const comment = async (cardId, listId, boardId, text, userName, dispatch)
 
 		let response = '';
 		submitCall = submitCall.then(() =>
-			axios
+			httpClient
 				.post(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/add-comment', {
 					text: text,
 				})
@@ -154,7 +154,7 @@ export const commentUpdate = async (cardId, listId, boardId, text, commentId, di
 		dispatch(updateComment(commentId, text));
 
 		submitCall = submitCall.then(() =>
-			axios.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + commentId, {
+			httpClient.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + commentId, {
 				text: text,
 			})
 		);
@@ -174,7 +174,7 @@ export const commentDelete = async (cardId, listId, boardId, commentId, dispatch
 		dispatch(deleteComment(commentId));
 
 		submitCall = submitCall.then(() =>
-			axios.delete(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + commentId)
+			httpClient.delete(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + commentId)
 		);
 		await submitCall;
 	} catch (error) {
@@ -193,7 +193,7 @@ export const memberAdd = async (cardId, listId, boardId, memberId, memberName, m
 		dispatch(updateMemberOfCard({ listId, cardId, memberId, memberName, memberColor }));
 
 		submitCall = submitCall.then(() =>
-			axios.post(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/add-member', {
+			httpClient.post(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/add-member', {
 				memberId: memberId,
 			})
 		);
@@ -214,7 +214,7 @@ export const memberDelete = async (cardId, listId, boardId, memberId, memberName
 		dispatch(deleteMemberOfCard({ listId, cardId, memberId }));
 
 		submitCall = submitCall.then(() =>
-			axios.delete(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + memberId + '/delete-member')
+			httpClient.delete(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + memberId + '/delete-member')
 		);
 		await submitCall;
 	} catch (error) {
@@ -233,7 +233,7 @@ export const labelCreate = async (cardId, listId, boardId, text, color, backColo
 
 		let response = '';
 		submitCall = submitCall.then(() =>
-			axios
+			httpClient
 				.post(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/create-label', {
 					text,
 					color,
@@ -274,7 +274,7 @@ export const labelUpdate = async (cardId, listId, boardId, labelId, label, dispa
 		);
 
 		submitCall = submitCall.then(() =>
-			axios.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + labelId + '/update-label', label)
+			httpClient.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + labelId + '/update-label', label)
 		);
 		await submitCall;
 	} catch (error) {
@@ -293,7 +293,7 @@ export const labelDelete = async (cardId, listId, boardId, labelId, dispatch) =>
 		dispatch(deleteLabelOfCard({ listId, cardId, labelId }));
 
 		submitCall = submitCall.then(() =>
-			axios.delete(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + labelId + '/delete-label')
+			httpClient.delete(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + labelId + '/delete-label')
 		);
 		await submitCall;
 	} catch (error) {
@@ -312,7 +312,7 @@ export const labelUpdateSelection = async (cardId, listId, boardId, labelId, sel
 		dispatch(updateLabelSelectionOfCard({ listId, cardId, labelId, selected }));
 
 		submitCall = submitCall.then(() =>
-			axios.put(
+			httpClient.put(
 				cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + labelId + '/update-label-selection',
 				{ selected: selected }
 			)
@@ -334,7 +334,7 @@ export const checklistCreate = async (cardId, listId, boardId, title, dispatch) 
 
 		let response = '';
 		submitCall = submitCall.then(() =>
-			axios
+			httpClient
 				.post(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/create-checklist', {
 					title,
 				})
@@ -361,7 +361,7 @@ export const checklistDelete = async (cardId, listId, boardId, checklistId, disp
 		dispatch(deleteChecklist(checklistId));
 		dispatch(deleteChecklistOfCard({ listId, cardId, checklistId }));
 		submitCall = submitCall.then(() =>
-			axios.delete(
+			httpClient.delete(
 				cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + checklistId + '/delete-checklist'
 			)
 		);
@@ -382,7 +382,7 @@ export const checklistItemAdd = async (cardId, listId, boardId, checklistId, tex
 
 		let response = '';
 		submitCall = submitCall.then(() =>
-			axios
+			httpClient
 				.post(
 					cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + checklistId + '/add-checklist-item',
 					{
@@ -445,7 +445,7 @@ export const checklistItemCompletedSet = async (
 		);
 
 		submitCall = submitCall.then(() =>
-			axios.put(
+			httpClient.put(
 				cardRoute +
 					'/' +
 					boardId +
@@ -488,7 +488,7 @@ export const checklistItemTextSet = async (cardId, listId, boardId, checklistId,
 		);
 
 		submitCall = submitCall.then(() =>
-			axios.put(
+			httpClient.put(
 				cardRoute +
 					'/' +
 					boardId +
@@ -525,7 +525,7 @@ export const checklistItemDelete = async (cardId, listId, boardId, checklistId, 
 		);
 
 		submitCall = submitCall.then(() =>
-			axios.delete(
+			httpClient.delete(
 				cardRoute +
 					'/' +
 					boardId +
@@ -557,7 +557,7 @@ export const startDueDatesUpdate = async (cardId, listId, boardId, startDate, du
 		dispatch(updateStartDueDatesOfCard({ listId, cardId, startDate, dueDate, dueTime }));
 
 		submitCall = submitCall.then(() =>
-			axios.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/update-dates', {
+			httpClient.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/update-dates', {
 				startDate,
 				dueDate,
 				dueTime,
@@ -580,7 +580,7 @@ export const dateCompletedUpdate = async (cardId, listId, boardId, completed, di
 		dispatch(updateDateCompletedOfCard({ listId, cardId, completed }));
 
 		submitCall = submitCall.then(() =>
-			axios.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/update-date-completed', {
+			httpClient.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/update-date-completed', {
 				completed,
 			})
 		);
@@ -601,7 +601,7 @@ export const attachmentAdd = async (cardId, listId, boardId, link, name, dispatc
 
 		let response = '';
 		submitCall = submitCall.then(() =>
-			axios
+			httpClient
 				.post(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/add-attachment', {
 					link: link,
 					name: name,
@@ -639,7 +639,7 @@ export const attachmentDelete = async (cardId, listId, boardId, attachmentId, di
 		dispatch(deleteAttachmentOfCard({ listId, cardId, attachmentId }));
 
 		submitCall = submitCall.then(() =>
-			axios.delete(
+			httpClient.delete(
 				cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + attachmentId + '/delete-attachment'
 			)
 		);
@@ -659,7 +659,7 @@ export const attachmentUpdate = async (cardId, listId, boardId, attachmentId, li
 		dispatch(updateAttachment({ attachmentId: attachmentId, link: link, name: name }));
 
 		submitCall = submitCall.then(() =>
-			axios.put(
+			httpClient.put(
 				cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/' + attachmentId + '/update-attachment',
 				{ link: link, name: name }
 			)
@@ -681,7 +681,7 @@ export const coverUpdate = async (cardId, listId, boardId, color, isSizeOne, dis
 		dispatch(updateCoverOfCard({ listId, cardId, color, isSizeOne }));
 
 		submitCall = submitCall.then(() =>
-			axios.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/update-cover', {
+			httpClient.put(cardRoute + '/' + boardId + '/' + listId + '/' + cardId + '/update-cover', {
 				color: color,
 				isSizeOne: isSizeOne,
 			})

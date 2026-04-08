@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Container, SubContainer, Image, Title, PhotosContainer, PhotosWrapper } from './styled';
-import axios from 'axios';
+import httpClient from '../../../../Utils/httpClient';
 import Skeleton from '@mui/material/Skeleton';
 import { useDispatch, useSelector } from 'react-redux';
 import { boardBackgroundUpdate } from '../../../../Services/boardService';
 
 const getImages = async () => {
-	const newAxios = axios.create();
-	delete newAxios.defaults.headers.common['Authorization'];
-	const res = await newAxios.get(
+	const newHttpClient = httpClient.create();
+	delete newHttpClient.defaults.headers.common['Authorization'];
+	const res = await newHttpClient.get(
 		'https://trello.com/proxy/unsplash/collections/317099/photos?per_page=30&order_by=latest&page=4'
 	);
 	return res.data;

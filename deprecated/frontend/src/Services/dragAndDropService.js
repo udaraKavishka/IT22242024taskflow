@@ -1,4 +1,4 @@
-import axios from 'axios';
+import httpClient from '../Utils/httpClient';
 import { updateCardDragDrop, updateListDragDrop } from '../Redux/Slices/listSlice';
 import { openAlert } from '../Redux/Slices/alertSlice';
 
@@ -51,7 +51,7 @@ export const updateCardOrder = async (props, dispatch) => {
 	// Server side requests
 
 	submitCall = submitCall.then(() =>
-		axios.post(listRoute + '/change-card-order', {
+		httpClient.post(listRoute + '/change-card-order', {
 			boardId: props.boardId,
 			sourceId: props.sourceId,
 			destinationId: props.destinationId,
@@ -88,7 +88,7 @@ export const updateListOrder = async (props, dispatch) => {
 
 	// Server side requests
 	submitCall = submitCall.then(() =>
-		axios.post(listRoute + '/change-list-order', {
+		httpClient.post(listRoute + '/change-list-order', {
 			boardId: props.boardId,
 			sourceIndex: props.sourceIndex,
 			destinationIndex: props.destinationIndex,

@@ -1,4 +1,4 @@
-import axios from "axios";
+import httpClient from "../Utils/httpClient";
 import { openAlert } from "../Redux/Slices/alertSlice";
 import {
   failFetchingBoards,
@@ -16,7 +16,7 @@ const boardRoute = `${backendUrl}/api/board`;
 export const getBoards = async (fromDropDown,dispatch) => {
   if(!fromDropDown)dispatch(startFetchingBoards());
   try {
-    const res = await axios.get(boardRoute + "/");
+    const res = await httpClient.get(boardRoute + "/");
     setTimeout(() => {
       dispatch(successFetchingBoards({ boards: res.data }));
     }, 1000);
@@ -46,7 +46,7 @@ export const createBoard = async (props, dispatch) => {
     return;
   }
   try {
-    const res = await axios.post(boardRoute + "/create", props);
+    const res = await httpClient.post(boardRoute + "/create", props);
     dispatch(addNewBoard(res.data));
     dispatch(successCreatingBoard(res.data));
     dispatch(
@@ -71,7 +71,7 @@ export const createBoard = async (props, dispatch) => {
 export const getBoard = async (boardId,dispatch) => {
   dispatch(setLoading(true));
   try {
-    const res = await axios.get(boardRoute + "/" + boardId);
+    const res = await httpClient.get(boardRoute + "/" + boardId);
       dispatch(successFetchingBoard(res.data));    
     setTimeout(() => {
       dispatch(setLoading(false));      
@@ -92,7 +92,7 @@ export const getBoard = async (boardId,dispatch) => {
 export const boardTitleUpdate = async (title, boardId, dispatch) => {
 	try {
 		dispatch(updateTitle(title));
-		await axios.put(boardRoute + '/' + boardId + '/update-board-title', {title:title});
+		await httpClient.put(boardRoute + '/' + boardId + '/update-board-title', {title:title});
 	} catch (error) {	
 		dispatch(
 			openAlert({

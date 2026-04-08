@@ -1,4 +1,4 @@
-import axios from 'axios';
+import httpClient from '../Utils/httpClient';
 import {
 	setLoading,
 	successCreatingList,
@@ -16,7 +16,7 @@ const boardRoute = `${backendUrl}/api/board`;
 export const getLists = async (boardId, dispatch) => {
 	dispatch(setLoading(true));
 	try {
-		const res = await axios.get(`${listRoute}/${boardId}`);
+		const res = await httpClient.get(`${listRoute}/${boardId}`);
 		dispatch(successFetchingLists(res.data));
 		setTimeout(() => {
 			dispatch(setLoading(false));
@@ -35,7 +35,7 @@ export const getLists = async (boardId, dispatch) => {
 export const activityUpdate = async (boardId, dispatch) => {
 	dispatch(setActivityLoading(true));
 	try {
-		const res = await axios.get(`${boardRoute}/${boardId}/activity`);
+		const res = await httpClient.get(`${boardRoute}/${boardId}/activity`);
 		dispatch(updateActivity(res.data));
 		dispatch(setActivityLoading(false));
 	} catch (error) {
@@ -52,7 +52,7 @@ export const activityUpdate = async (boardId, dispatch) => {
 export const createList = async (title, boardId, dispatch) => {
 	dispatch(setLoading(true));
 	try {
-		const res = await axios.post(`${listRoute}/create`, { title: title, boardId: boardId });
+		const res = await httpClient.post(`${listRoute}/create`, { title: title, boardId: boardId });
 		dispatch(successCreatingList(res.data));
 		dispatch(setLoading(false));
 	} catch (error) {
@@ -69,7 +69,7 @@ export const createList = async (title, boardId, dispatch) => {
 export const DeleteList = async (listId, boardId, dispatch) => {
 	dispatch(setLoading(true));
 	try {
-		await axios.delete(`${listRoute}/${boardId}/${listId}`);
+		await httpClient.delete(`${listRoute}/${boardId}/${listId}`);
 		await dispatch(successDeletingList(listId));
 		dispatch(setLoading(false));
 	} catch (error) {
@@ -86,7 +86,7 @@ export const DeleteList = async (listId, boardId, dispatch) => {
 export const listTitleUpdate = async (listId, boardId, title, dispatch) => {
 	try {
 		await dispatch(updateListTitle({ listId: listId, title: title }));
-		await axios.put(`${listRoute}/${boardId}/${listId}/update-title`, { title: title });
+		await httpClient.put(`${listRoute}/${boardId}/${listId}/update-title`, { title: title });
 	} catch (error) {
 		dispatch(
 			openAlert({
@@ -100,7 +100,7 @@ export const listTitleUpdate = async (listId, boardId, title, dispatch) => {
 export const deleteBoard = async (boardId, dispatch) => {
     try {
         // Make the API call to delete the board
-        await axios.delete(`${boardRoute}/${boardId}`);
+        await httpClient.delete(`${boardRoute}/${boardId}`);
         // Dispatch the delete action
         dispatch(deleteBoardAction(boardId));
     } catch (error) {
@@ -111,7 +111,7 @@ export const deleteBoard = async (boardId, dispatch) => {
 export const boardDescriptionUpdate = async (boardId, description, dispatch) => {
 	try {
 		await dispatch(updateDescription(description));
-		await axios.put(`${boardRoute}/${boardId}/update-board-description`,{
+		await httpClient.put(`${boardRoute}/${boardId}/update-board-description`,{
 			description
 		});
 	} catch (error) {
@@ -127,7 +127,7 @@ export const boardDescriptionUpdate = async (boardId, description, dispatch) => 
 export const boardBackgroundUpdate = async (boardId, background, isImage, dispatch) => {
 	try {
 		await dispatch(updateBackground({background,isImage}));
-		await axios.put(`${boardRoute}/${boardId}/update-background`,{
+		await httpClient.put(`${boardRoute}/${boardId}/update-background`,{
 			background,
 			isImage,
 		});
@@ -143,7 +143,7 @@ export const boardBackgroundUpdate = async (boardId, background, isImage, dispat
 
 export const boardMemberAdd = async (boardId, members, dispatch) => {
 	try {
-		const result = await axios.post(`${boardRoute}/${boardId}/add-member`,{
+		const result = await httpClient.post(`${boardRoute}/${boardId}/add-member`,{
 			members
 		});
 		await dispatch(addMembers(result.data));
