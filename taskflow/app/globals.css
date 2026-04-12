@@ -1,0 +1,5 @@
+@import "tailwindcss";
+@import "../src/index.css";
+@import "react-date-range/dist/styles.css";
+@import "react-date-range/dist/theme/default.css";
+@import "../src/Components/Modals/EditCardModal/Popovers/Date/DateRange.css";
