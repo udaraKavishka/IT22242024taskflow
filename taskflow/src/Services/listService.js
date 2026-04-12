@@ -1,0 +1,39 @@
+"use client";
+
+import httpClient from '../Utils/httpClient';
+import { openAlert } from '../Redux/Slices/alertSlice';
+import { setLoading, successCreatingCard,deleteCard } from '../Redux/Slices/listSlice';
+
+const backendUrl= process.env.NEXT_PUBLIC_BACKEND_URL || "";
+const cardRoute = `${backendUrl}/api/card`;
+
+export const createCard = async (title, listId, boardId, dispatch) => {
+	dispatch(setLoading(true));
+	try {
+		const updatedList = await httpClient.post(cardRoute + '/create', { title: title, listId: listId, boardId: boardId });
+		dispatch(successCreatingCard({ listId: listId, updatedList: updatedList.data }));
+		dispatch(setLoading(false));
+	} catch (error) {
+		dispatch(setLoading(false));
+		dispatch(
+			openAlert({
+				message: error?.response?.data?.errMessage ? error.response.data.errMessage : error.message,
+				severity: 'error',
+			})
+		);
+	}
+};
+
+export const cardDelete = async(listId,boardId,cardId,dispatch)=>{
+	try {
+		await dispatch(deleteCard({listId,cardId}));
+		await httpClient.delete(cardRoute + "/"+boardId+"/"+listId + "/" + cardId+ "/delete-card");
+	} catch (error) {
+		dispatch(
+			openAlert({
+				message: error?.response?.data?.errMessage ? error.response.data.errMessage : error.message,
+				severity: 'error',
+			})
+		);
+	}
+}

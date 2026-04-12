@@ -1,0 +1,113 @@
+"use client";
+
+import Navbar from '../../Navbar';
+import React, { useEffect, useState } from 'react';
+import TopBar from './BoardComponents/TopBar/TopBar';
+import * as style from './Styled';
+import AddList from './BoardComponents/AddList/AddList';
+import List from './BoardComponents/List/List';
+import { useDispatch, useSelector } from 'react-redux';
+import { getBoard } from '../../../Services/boardsService';
+import { getLists } from '../../../Services/boardService';
+import { updateCardOrder, updateListOrder } from '../../../Services/dragAndDropService';
+import LoadingScreen from '../../LoadingScreen';
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
+import { useParams } from "next/navigation";
+import ProtectedRoute from '../../../Utils/ProtectedRoute';
+
+const Board = () => {
+	/* props.match.params.id */
+	const params = useParams();
+	const id = params?.id;
+	const dispatch = useDispatch();
+	const { backgroundImageLink, isImage, loading, title } = useSelector((state) => state.board);
+	const { allLists, loadingListService } = useSelector((state) => state.list);
+	const [searchString, setSearchString] = useState('');
+	// const boardId = props.match.params.id;
+	useEffect(() => {
+		if (typeof id === 'string') {
+			getBoard(id, dispatch);
+			getLists(id, dispatch);
+		}
+	}, [id, dispatch]);
+
+	useEffect(() => {
+		document.title = title + ' | TaskFlow';
+	}, [title]);
+
+	const onDragEnd = async (result) => {
+		const { draggableId, source, destination } = result;
+		if (!destination) return;
+		if (result.type === 'column') {
+			if (source.index === destination.index) return;
+			await updateListOrder(
+				{
+					sourceIndex: source.index,
+					destinationIndex: destination.index,
+					listId: draggableId,
+					boardId: id,
+					allLists: allLists,
+				},
+				dispatch
+			);
+			return;
+		}
+		if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+		await updateCardOrder(
+			{
+				sourceId: source.droppableId,
+				destinationId: destination.droppableId,
+				sourceIndex: source.index,
+				destinationIndex: destination.index,
+				cardId: draggableId,
+				boardId: id,
+				allLists: allLists,
+			},
+			dispatch
+		);
+	};
+
+	if (typeof id !== 'string') {
+		return null;
+	}
+
+	return (
+		<ProtectedRoute>
+			<>
+				<Navbar searchString={searchString} setSearchString={setSearchString} />
+				<style.Container
+					$isImage={isImage}
+					$bgimage={isImage ? backgroundImageLink.split('?')[0] : backgroundImageLink}
+				>
+					<TopBar />
+					{(loading || loadingListService) && <LoadingScreen />}
+					<DragDropContext onDragEnd={onDragEnd}>
+						<Droppable droppableId='all-columns' direction='horizontal' type='column'>
+							{(provided) => {
+								return (
+									<style.ListContainer {...provided.droppableProps} ref={provided.innerRef}>
+										{allLists.map((list, index) => {
+											return (
+												<List
+													searchString={searchString}
+													key={list._id}
+													index={index}
+													info={list}
+													boardId={id}
+												/>
+											);
+										})}
+										{provided.placeholder}
+										<AddList boardId={id} />
+									</style.ListContainer>
+								);
+							}}
+						</Droppable>
+					</DragDropContext>
+				</style.Container>
+			</>
+		</ProtectedRoute>
+	);
+};
+
+export default Board;
